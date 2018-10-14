@@ -52,7 +52,9 @@ def BaseBgeScraper():
     else:
         print('fail')
 
-sched = BlockingScheduler()
-sched.add_job(main, 'cron', minute='4')
+#sched = BlockingScheduler()
+#sched.add_job(main, 'cron', minute='4')
 
-sched.start()
+#sched.start()
+
+main()

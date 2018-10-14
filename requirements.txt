@@ -1,0 +1,6 @@
+APScheduler
+beautifulsoup4
+pandas
+requests
+simplejson
+mysql-connector-python
