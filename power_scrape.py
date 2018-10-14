@@ -10,7 +10,7 @@ from apscheduler.schedulers.blocking import BlockingScheduler
 
 
 
-cnx = mysql.connector.connect(user=myconfig.power_user, password=myconfig.power_pass, host='192.168.1.10', database='thor')
+cnx = mysql.connector.connect(user=myconfig.power_user, password=myconfig.power_pass, host='192.168.1.10', database=myconfig.power_db)
 cursor = cnx.cursor()
 db_timestamp = datetime.datetime.utcnow()
 ts = db_timestamp.strftime('%Y-%m-%d %H:%M:%S')
