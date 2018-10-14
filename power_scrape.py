@@ -7,7 +7,10 @@ import datetime
 import mysql.connector
 import myconfig
 from apscheduler.schedulers.blocking import BlockingScheduler
+import logging
 
+logging.basicConfig()
+logging.getLogger('apscheduler').setLevel(logging.DEBUG)
 
 
 cnx = mysql.connector.connect(user=myconfig.power_user, password=myconfig.power_pass, host='192.168.1.10', database=myconfig.power_db)
@@ -52,9 +55,7 @@ def BaseBgeScraper():
     else:
         print('fail')
 
-#sched = BlockingScheduler()
-#sched.add_job(main, 'cron', minute='4')
-
-#sched.start()
-
-main()
+# Configure job to kick this import off every 30 minutes
+sched = BlockingScheduler()
+sched.add_job(main, 'cron', minute='*/30')
+sched.start()
