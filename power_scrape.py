@@ -13,10 +13,10 @@ logging.basicConfig()
 logging.getLogger('apscheduler').setLevel(logging.DEBUG)
 
 
-cnx = mysql.connector.connect(user=myconfig.power_user, password=myconfig.power_pass, host='192.168.1.10', database=myconfig.power_db)
-cursor = cnx.cursor()
-db_timestamp = datetime.datetime.utcnow()
-ts = db_timestamp.strftime('%Y-%m-%d %H:%M:%S')
+#cnx = mysql.connector.connect(user=myconfig.power_user, password=myconfig.power_pass, host='192.168.1.10', database=myconfig.power_db)
+#cursor = cnx.cursor()
+#db_timestamp = datetime.datetime.utcnow()
+#ts = db_timestamp.strftime('%Y-%m-%d %H:%M:%S')
 
 
 
@@ -32,6 +32,10 @@ def main():
     BaseBgeScraper()
 
 def BaseBgeScraper():
+    cnx = mysql.connector.connect(user=myconfig.power_user, password=myconfig.power_pass, host='192.168.1.10', database=myconfig.power_db)
+    cursor = cnx.cursor()
+    db_timestamp = datetime.datetime.utcnow()
+    ts = db_timestamp.strftime('%Y-%m-%d %H:%M:%S')
     metadata_url = 'https://s3.amazonaws.com/outagemap.bge.com/data/interval_generation_data/metadata.xml'
     metadata = requests.get(metadata_url)
     metadata_content = bs(metadata.content, 'html.parser') 
@@ -51,11 +55,12 @@ def BaseBgeScraper():
         sql_stmt = 'INSERT INTO thor.bge (insert_ts, utility, area_name, custs_out, custs_rest, total_custs) VALUES (%s, %s, %s, %s, %s, %s)'
         cursor.executemany(sql_stmt, to_insert)
         cnx.commit()
-        cursor.close()
     else:
         print('fail')
+    cnx.close()
+
 
 # Configure job to kick this import off every 30 minutes
 sched = BlockingScheduler()
-sched.add_job(main, 'cron', minute='*/30')
+sched.add_job(main, 'cron', minute='*/1')
 sched.start()
